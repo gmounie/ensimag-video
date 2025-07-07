@@ -60,7 +60,7 @@ struct streamstate *getStreamState(ogg_sync_state *pstate, ogg_page *ppage,
     s->serial = serial;
     s->nbpacket = 0;
     s->nbpacketoutsync = 0;
-    s->strtype = TYPE_UNKNOW;
+    s->strtype = streamtype::TYPE_UNKNOW;
     s->headersRead = false;
     int res = ogg_stream_init(&s->strstate, serial);
     th_info_init(&s->th_dec.info);
@@ -72,7 +72,7 @@ struct streamstate *getStreamState(ogg_sync_state *pstate, ogg_page *ppage,
     // Add your code HERE
     // proteger l'accès à chaque hashmap
 
-    if (type == TYPE_THEORA) {
+    if (type == streamtype::TYPE_THEORA) {
       maptheorastrstate[serial] = s;
     } else {
       mapvorbisstrstate[serial] = s;
@@ -81,7 +81,7 @@ struct streamstate *getStreamState(ogg_sync_state *pstate, ogg_page *ppage,
   } else {
     // proteger l'accès à chaque hashmap
 
-    if (type == TYPE_THEORA) {
+    if (type == streamtype::TYPE_THEORA) {
       auto search = maptheorastrstate.find(serial);
       assert(search != maptheorastrstate.end());
       s = search->second;
@@ -124,7 +124,7 @@ int getPacket(struct streamstate *s) {
 
 int decodeAllHeaders(int respac, struct streamstate *s, enum streamtype type) {
   // if the packet is complete, decode it
-  if (respac == 1 && (!s->headersRead) && s->strtype != TYPE_VORBIS) {
+    if (respac == 1 && (!s->headersRead) && s->strtype != streamtype::TYPE_VORBIS) {
     // try to detect if the packet contain a theora header
     int res = th_decode_headerin(&s->th_dec.info, &s->th_dec.comment,
                                  &s->th_dec.setup, &s->packet);
@@ -134,7 +134,7 @@ int decodeAllHeaders(int respac, struct streamstate *s, enum streamtype type) {
       if (res > 0) {
         // this a theora header
         // there are 3 headers
-        s->strtype = TYPE_THEORA;
+        s->strtype = streamtype::TYPE_THEORA;
         // we have finish with the packet
         return 1;
       }
@@ -143,10 +143,10 @@ int decodeAllHeaders(int respac, struct streamstate *s, enum streamtype type) {
       // allocation du contexte
       s->th_dec.ctx = th_decode_alloc(&s->th_dec.info, s->th_dec.setup);
       assert(s->th_dec.ctx != NULL);
-      assert(s->strtype == TYPE_THEORA);
+      assert(s->strtype == streamtype::TYPE_THEORA);
       s->headersRead = true;
 
-      if (type == TYPE_THEORA) {
+      if (type == streamtype::TYPE_THEORA) {
 	// BEGIN your modification HERE
         // lancement du thread gérant l'affichage (draw2SDL)
         // inserer votre code ici !!
@@ -154,11 +154,11 @@ int decodeAllHeaders(int respac, struct streamstate *s, enum streamtype type) {
       }
     }
   }
-  if (respac == 1 && (!s->headersRead) && s->strtype != TYPE_THEORA) {
+  if (respac == 1 && (!s->headersRead) && s->strtype != streamtype::TYPE_THEORA) {
     int res = vorbis_synthesis_headerin(&s->vo_dec.info, &s->vo_dec.comment,
                                         &s->packet);
 
-    if (res == OV_ENOTVORBIS && s->strtype == TYPE_VORBIS) {
+    if (res == OV_ENOTVORBIS && s->strtype == streamtype::TYPE_VORBIS) {
       // first packet
       res = vorbis_synthesis_init(&s->vo_dec.dsp, &s->vo_dec.info);
       assert(res == 0);
@@ -167,7 +167,7 @@ int decodeAllHeaders(int respac, struct streamstate *s, enum streamtype type) {
       s->headersRead = true;
     } else if (res == 0) {
       // lecture de l'entete vorbis
-      s->strtype = TYPE_VORBIS;
+      s->strtype = streamtype::TYPE_VORBIS;
       // ce packet a été complètement traitée
       return 1;
     }

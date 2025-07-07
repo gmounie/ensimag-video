@@ -15,7 +15,7 @@ ogg_sync_state oggtheorastate,
 ogg_page theorapage,
     vorbispage; /* one Ogg bitstream page. Vorbis packets are inside */
 
-void theoraStreamReader(string filename) {
+void theoraStreamReader(const string filename) {
   // char *filename = (char *) arg;
 
   ifstream vf(filename);
@@ -38,10 +38,10 @@ void theoraStreamReader(string filename) {
 
     if (respac == 0) {
       pageReader(vf, &oggtheorastate, &theorapage);
-      s = getStreamState(&oggtheorastate, &theorapage, TYPE_THEORA);
+      s = getStreamState(&oggtheorastate, &theorapage, streamtype::TYPE_THEORA);
 
       // ignorer le stream vorbis
-      if (s->strtype == TYPE_VORBIS)
+      if (s->strtype == streamtype::TYPE_VORBIS)
         continue;
 
       respac = addPageGetPacket(&theorapage, s);
@@ -62,17 +62,17 @@ void theoraStreamReader(string filename) {
       break;
     }
 
-    if (decodeAllHeaders(respac, s, TYPE_THEORA))
+    if (decodeAllHeaders(respac, s, streamtype::TYPE_THEORA))
       continue;
 
-    if (s->strtype == TYPE_THEORA && s->headersRead) {
+    if (s->strtype == streamtype::TYPE_THEORA && s->headersRead) {
       theora2SDL(s);
     }
   }
   vf.close();
 }
 
-void vorbisStreamReader(string filename) {
+void vorbisStreamReader(const string filename) {
   // char *filename = (char *) arg;
   ifstream vf(filename);
   // FILE *vf = fopen(filename, "r");
@@ -96,10 +96,10 @@ void vorbisStreamReader(string filename) {
 
     if (respac == 0) {
       pageReader(vf, &oggvorbisstate, &vorbispage);
-      s = getStreamState(&oggvorbisstate, &vorbispage, TYPE_VORBIS);
+      s = getStreamState(&oggvorbisstate, &vorbispage, streamtype::TYPE_VORBIS);
 
       // ignorer le stream theora
-      if (s->strtype == TYPE_THEORA)
+      if (s->strtype == streamtype::TYPE_THEORA)
         continue;
 
       // ajouter la page dans le décodeur et tenter d'extraire un
@@ -123,11 +123,11 @@ void vorbisStreamReader(string filename) {
       break;
     }
 
-    if (decodeAllHeaders(respac, s, TYPE_THEORA))
+    if (decodeAllHeaders(respac, s, streamtype::TYPE_THEORA))
       continue;
 
     // boucle principale de lecture vorbis
-    if (s->strtype == TYPE_VORBIS && s->headersRead) {
+    if (s->strtype == streamtype::TYPE_VORBIS && s->headersRead) {
       vorbis2SDL(s);
     }
   }

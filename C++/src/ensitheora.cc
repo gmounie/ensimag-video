@@ -62,7 +62,7 @@ void draw2SDL(int serial) {
   s = search->second;
 
   // END of your moficiation HERE
-  assert(s->strtype == TYPE_THEORA);
+  assert(s->strtype == streamtype::TYPE_THEORA);
 
   while (!fini) {
     // récupérer les évenements de fin
@@ -84,7 +84,7 @@ void draw2SDL(int serial) {
     // Copy the texture with the renderer
     SDL_SetRenderDrawColor(renderer, 0, 0, 128, 255);
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderCopy(renderer, texture, nullptr, nullptr);
     SDL_RenderPresent(renderer);
 
     double timemsfromstart = msFromStart();
@@ -99,7 +99,7 @@ void draw2SDL(int serial) {
 }
 
 void theora2SDL(struct streamstate *s) {
-  assert(s->strtype == TYPE_THEORA);
+    assert(s->strtype == streamtype::TYPE_THEORA);
 
   ogg_int64_t granulpos = -1;
   double framedate; // framedate in seconds

@@ -5,7 +5,7 @@ using namespace std;
 /* les variables pour la synchro, ici */
 
 /* l'implantation des fonctions de synchro ici */
-void envoiTailleFenetre(th_ycbcr_buffer buffer) {}
+void envoiTailleFenetre([[maybe_unused]] th_ycbcr_buffer buffer) {}
 
 void attendreTailleFenetre() {}
 

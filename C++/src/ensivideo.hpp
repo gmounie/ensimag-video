@@ -10,7 +10,7 @@
 
 using namespace std;
 
-enum streamtype { TYPE_UNKNOW, TYPE_THEORA, TYPE_VORBIS };
+enum class streamtype { TYPE_UNKNOW, TYPE_THEORA, TYPE_VORBIS };
 
 struct theora_decode {
   th_info info;

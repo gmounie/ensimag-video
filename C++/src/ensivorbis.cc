@@ -14,15 +14,15 @@ map<int, struct streamstate *> mapvorbisstrstate;
 
 void vorbis2SDL(struct streamstate *s) {
   static long long int nbsamplesbytes = 0;
-  assert(s->strtype == TYPE_VORBIS);
+  assert(s->strtype == streamtype::TYPE_VORBIS);
   if (!audioid) {
     want.freq = s->vo_dec.info.rate;
     want.format = AUDIO_F32;
     want.channels = s->vo_dec.info.channels;
     want.samples = 4096;
-    want.callback = NULL;
+    want.callback = nullptr;
 
-    audioid = SDL_OpenAudioDevice(NULL, false, &want, &have, 0);
+    audioid = SDL_OpenAudioDevice(nullptr, false, &want, &have, 0);
     SDL_PauseAudioDevice(audioid, 0);
     // start point
     datedebut = chrono::high_resolution_clock::now();

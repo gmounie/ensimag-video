@@ -3,7 +3,7 @@
 
 #include <string>
 
-void vorbisStreamReader(std::string filename);
-void theoraStreamReader(std::string filename);
+void vorbisStreamReader(const std::string filename);
+void theoraStreamReader(const std::string filename);
 
 #endif
