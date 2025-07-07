@@ -10,17 +10,14 @@ enable_testing()
 set(CMAKE_BUILD_TYPE Debug)
 
 #########
-# Gestion des variantes
+# Gestion des équipes et variante du sujet / Team management and addition
 #########
-# Vous devez editer les lignes suivantes pour y mettre vos logins
-#########
-set(LOGINS login1 login2 login3)
-
-# Vérification du renseignement des login
-list(SORT LOGINS)
-if (LOGINS MATCHES "login[123]")
-  message(FATAL_ERROR "** ERREUR **: Vous devez modifier CMakeLists.txt pour y mettre vos logins")
-endif(LOGINS MATCHES "login[123]")
+if (EXISTS ${CMAKE_SOURCE_DIR}/AUTHORS)
+  message(STATUS "Les auteurs du TP incrits dans AUTHORS sont / AUTHORS are:")
+  execute_process (COMMAND cat AUTHORS WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+else()
+  message(FATAL_ERROR "** ERREUR / ERROR **: Vous devez mettre vos prénoms, noms et login dans un fichier nommé 'AUTHORS' à la racine du projet / Add an 'AUTHORS' file with all authors' name, firstname and login at the project root; Fichier manquant/missing file: "  ${CMAKE_SOURCE_DIR}/AUTHORS)
+endif()
 
 # Trouver la SDL2, ogg, theora et vorbis avec pkgconfig
 execute_process(COMMAND bash -c "PKG_CONFIG_PATH=/opt/sdl2-2.0.5/lib/pkgconfig:$PKG_CONFIG_PATH pkg-config --cflags ogg vorbis theora theoradec sdl2" OUTPUT_VARIABLE ALL_PKG_CFLAGS)
@@ -38,12 +35,12 @@ message(STATUS "ldflags: ${ALLSTRIP_PKG_LDFLAGS}")
 
 # Use the 2017-2018 C standard with GNU extensions ("99" instead
 # should work too with this skeleton)
-set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD 23)
 
 # CFLAGS for debug and all flags from the libraries sdl/ogg/vorbis from pkg-config
 set(CMAKE_BUILD_TYPE Debug)
 
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${ALLSTRIP_PKG_CFLAGS} -Wall -Wextra -Werror -fanalyzer")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${ALLSTRIP_PKG_CFLAGS} -Wall -Wextra -fanalyzer")
 
 
 ##
@@ -70,8 +67,8 @@ add_custom_target(check ctest -V)
 # Construction de l'archive
 ##
 string(REPLACE ";" "-" LOGINS_SANS_POINTVIRGULE "${LOGINS}")
-set(CPACK_PACKAGE_VERSION_MAJOR "2")
-set(CPACK_PACKAGE_VERSION_MINOR "0c")
+set(CPACK_PACKAGE_VERSION_MAJOR "3")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH ${LOGINS_SANS_POINTVIRGULE})
 set(CPACK_SOURCE_GENERATOR "TGZ")
 set(CPACK_SOURCE_IGNORE_FILES

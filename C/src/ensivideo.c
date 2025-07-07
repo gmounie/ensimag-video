@@ -6,7 +6,7 @@
 #include "oggstream.h"
 #include "stream_common.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[static argc+1]) {
   int res;
 
   if (argc != 2) {

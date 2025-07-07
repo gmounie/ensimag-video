@@ -11,17 +11,17 @@ int windowsy = 0;
 int tex_iaff = 0;
 int tex_iwri = 0;
 
-static SDL_Window *screen = NULL;
-static SDL_Renderer *renderer = NULL;
+static SDL_Window *screen = nullptr;
+static SDL_Renderer *renderer = nullptr;
 struct TextureDate texturedate[NBTEX] = {};
 SDL_Rect rect = {};
 
-struct streamstate *theorastrstate = NULL;
+struct streamstate *theorastrstate = nullptr;
 
 void *draw2SDL(void *arg) {
   int serial = (int)(long long int)arg;
-  struct streamstate *s = NULL;
-  SDL_Texture *texture = NULL;
+  struct streamstate *s = nullptr;
+  SDL_Texture *texture = nullptr;
 
   attendreTailleFenetre();
 
@@ -44,7 +44,7 @@ void *draw2SDL(void *arg) {
 
   assert(texture);
   // remplir les planes de TextureDate
-  for (int i = 0; i < NBTEX; i++) {
+  for (uint32_t i = 0; i < NBTEX; i++) {
     texturedate[i].plane[0] = malloc(windowsx * windowsy);
     texturedate[i].plane[1] = malloc(windowsx * windowsy);
     texturedate[i].plane[2] = malloc(windowsx * windowsy);
@@ -81,7 +81,7 @@ void *draw2SDL(void *arg) {
     // Copy the texture with the renderer
     SDL_SetRenderDrawColor(renderer, 0, 0, 128, 255);
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderCopy(renderer, texture, nullptr, nullptr);
     SDL_RenderPresent(renderer);
 
     double timemsfromstart = msFromStart();

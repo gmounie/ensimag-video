@@ -10,7 +10,7 @@ SDL_AudioDeviceID audioid = 0;
 SDL_AudioSpec want = {};
 SDL_AudioSpec have = {};
 
-struct streamstate *vorbisstrstate = NULL;
+struct streamstate *vorbisstrstate = nullptr;
 
 void vorbis2SDL(struct streamstate *s) {
   static long long int nbsamplesbytes = 0;
@@ -20,9 +20,9 @@ void vorbis2SDL(struct streamstate *s) {
     want.format = AUDIO_F32;
     want.channels = s->vo_dec.info.channels;
     want.samples = 4096;
-    want.callback = NULL;
+    want.callback = nullptr;
 
-    audioid = SDL_OpenAudioDevice(NULL, false, &want, &have, 0);
+    audioid = SDL_OpenAudioDevice(nullptr, false, &want, &have, 0);
     SDL_PauseAudioDevice(audioid, 0);
     // start point
     clock_gettime(CLOCK_REALTIME, &datedebut);
@@ -37,7 +37,7 @@ void vorbis2SDL(struct streamstate *s) {
   int samples = 0;
   while ((samples = vorbis_synthesis_pcmout(&s->vo_dec.dsp, &pcm)) > 0) {
     float *tmpbuff = malloc(sizeof(float[samples * s->vo_dec.info.channels]));
-    assert(tmpbuff != NULL);
+    assert(tmpbuff != nullptr);
     for (int sa = 0, idx = 0; sa < samples; sa++)
       for (int c = 0; c < s->vo_dec.info.channels; c++, idx++)
         tmpbuff[idx] = pcm[c][sa];

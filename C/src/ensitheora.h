@@ -5,7 +5,7 @@
 #include <SDL2/SDL.h>
 #include <ogg/ogg.h>
 
-#define NBTEX 30
+constexpr size_t NBTEX=30;
 
 struct TextureDate {
   unsigned char *plane[3]; // copy of plane are contiguous, thus
