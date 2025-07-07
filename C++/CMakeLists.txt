@@ -10,17 +10,14 @@ enable_testing()
 set(CMAKE_BUILD_TYPE Debug)
 
 #########
-# Gestion des variantes
+# Gestion des équipes et variante du sujet / Team management and addition
 #########
-# Vous devez editer les lignes suivantes pour y mettre vos logins
-#########
-set(LOGINS login1 login2 login3)
-
-# Vérification du renseignement des login
-list(SORT LOGINS)
-if (LOGINS MATCHES "login[123]")
-  message(FATAL_ERROR "** ERREUR **: Vous devez modifier CMakeLists.txt pour y mettre vos logins")
-endif(LOGINS MATCHES "login[123]")
+if (EXISTS ${CMAKE_SOURCE_DIR}/AUTHORS)
+  message(STATUS "Les auteurs du TP incrits dans AUTHORS sont / AUTHORS are:")
+  execute_process (COMMAND cat AUTHORS WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+else()
+  message(FATAL_ERROR "** ERREUR / ERROR **: Vous devez mettre vos prénoms, noms et login dans un fichier nommé 'AUTHORS' à la racine du projet / Add an 'AUTHORS' file with all authors' name, firstname and login at the project root; Fichier manquant/missing file: "  ${CMAKE_SOURCE_DIR}/AUTHORS)
+endif()
 
 # Trouver la SDL2, ogg, theora et vorbis avec pkgconfig
 execute_process(COMMAND bash -c "PKG_CONFIG_PATH=/opt/sdl2-2.0.5/lib/pkgconfig:$PKG_CONFIG_PATH pkg-config --cflags ogg vorbis theora theoradec sdl2" OUTPUT_VARIABLE ALL_PKG_CFLAGS)
@@ -35,8 +32,8 @@ message(STATUS "cflags: ${ALLSTRIP_PKG_CFLAGS}")
 message(STATUS "ldflags: ${ALLSTRIP_PKG_LDFLAGS}")
 
 
-# Passer le compilateur CXX au standard C++-20 et ajouter les CFLAGS pour la sdl
-set(CMAKE_CXX_STANDARD 20)
+# Passer le compilateur CXX au standard C++-23 et ajouter les CFLAGS pour la sdl
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${ALLSTRIP_PKG_CFLAGS} -Wall -Wextra -Werror -fanalyzer")
 
@@ -55,7 +52,7 @@ target_link_libraries(ensivideo pthread ${ALLSTRIP_PKG_LDFLAGS})
 # Construction de l'archive
 ##
 string(REPLACE ";" "-" LOGINS_SANS_POINTVIRGULE "${LOGINS}")
-set(CPACK_PACKAGE_VERSION_MAJOR "2")
+set(CPACK_PACKAGE_VERSION_MAJOR "3")
 set(CPACK_PACKAGE_VERSION_MINOR "0c++")
 set(CPACK_PACKAGE_VERSION_PATCH ${LOGINS_SANS_POINTVIRGULE})
 set(CPACK_SOURCE_GENERATOR "TGZ")
